@@ -64,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
             }
 
             parameters = camera.getParameters();
-            parameters.setFlashMode(android.hardware.Camera.Parameters.FLASH_MODE_ON);
+            parameters.setFlashMode(android.hardware.Camera.Parameters.FLASH_MODE_TORCH);
             camera.setParameters(parameters);
             camera.startPreview();
             isFlashOn = true;
