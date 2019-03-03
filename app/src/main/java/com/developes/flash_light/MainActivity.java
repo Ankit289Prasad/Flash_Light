@@ -15,8 +15,8 @@ import java.security.Permission;
 public class MainActivity extends AppCompatActivity {
 
     private Button btn_switch;
-    private Camera camera;
-    private Camera.Parameters parameters;
+    private android.hardware.Camera camera;
+    private android.hardware.Camera.Parameters parameters;
     private boolean isFlashOn;
 
     @Override
@@ -50,11 +50,28 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+
+        getCamera();
+        toogleImage();
+
     }
 
     private void turnOnFlash() {
-    }
 
+        if (!isFlashOn) {
+            if (camera == null || parameters == null) {
+                return;
+            }
+
+            parameters = camera.getParameters();
+            parameters.setFlashMode(android.hardware.Camera.Parameters.FLASH_MODE_ON);
+            camera.setParameters(parameters);
+            camera.startPreview();
+            isFlashOn = true;
+            toogleImage();
+
+        }
+    }
     private void turnOffFlash() {
 
         if(isFlashOn){
@@ -63,9 +80,37 @@ public class MainActivity extends AppCompatActivity {
             }
 
             parameters=camera.getParameters();
-            parameters.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
+            parameters.setFlashMode(android.hardware.Camera.Parameters.FLASH_MODE_OFF);
+            camera.setParameters(parameters);
+            camera.stopPreview();
+            isFlashOn=false;
+            toogleImage();
+
         }
     }
+
+    private void getCamera(){
+        if(camera==null){
+            try{
+
+                camera= android.hardware.Camera.open();
+                parameters=camera.getParameters();
+
+            }
+            catch (RuntimeException e){}
+        }
+    }
+
+    private void toogleImage(){
+
+        if(isFlashOn){
+            btn_switch.setBackgroundResource(R.drawable.onbutton);
+        }
+        else{
+            btn_switch.setBackgroundResource(R.drawable.offbutton);
+        }
+    }
+
 
     private boolean checkReadPermisson(){
 
